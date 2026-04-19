@@ -1157,19 +1157,6 @@
     .sidebar.open {
       transform: translateX(0);
     }
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 39;
-    }
-    .sidebar-overlay.open {
-      display: block;
-    }
     .main {
       grid-column: 1;
     }
@@ -1182,50 +1169,14 @@
     .inbox-list {
       min-height: 0;
     }
-    .channel-tabs {
-      display: none !important;
-    }
-    .channel-filter-dropdown {
-      display: flex !important;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-    }
     .detail-panel {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 50;
       display: none;
-      flex-direction: column;
     }
     .detail-panel.mobile-show {
-      display: flex !important;
-      background: var(--bg);
+      display: flex;
     }
     .detail-header {
       padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .detail-back-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: var(--text-mid);
-    }
-    .detail-back-btn:hover {
-      background: var(--card-hover);
-      color: var(--text);
     }
     .messages-area {
       padding: 12px 16px;
@@ -1275,8 +1226,12 @@
     .inbox-header {
       padding: 12px 16px;
     }
-    .channel-filter-dropdown {
+    .channel-tabs {
       padding: 8px 12px;
+    }
+    .channel-tab {
+      padding: 4px 8px;
+      font-size: 11px;
     }
     .message-item {
       padding: 10px 14px;
@@ -1313,13 +1268,12 @@
       <div class="top-action-btn" title="Settings">&#9881;</div>
       <div class="user-pill">
         <div class="user-avatar">RN</div>
-        <div class="user-name">Navarro</div>
+        <div class="user-name">Reynaldo</div>
       </div>
     </div>
   </div>
 
   <!-- SIDEBAR -->
-  <div class="sidebar-overlay"></div>
   <div class="sidebar">
     <div class="sidebar-section">Principal</div>
     <div class="nav-item active" data-view="inbox">
@@ -1402,14 +1356,6 @@
             <button class="channel-tab" data-channel="whatsapp"><span class="channel-dot whatsapp"></span>WhatsApp <span class="count-badge">6</span></button>
             <button class="channel-tab" data-channel="facebook"><span class="channel-dot facebook"></span>Facebook <span class="count-badge">3</span></button>
             <button class="channel-tab" data-channel="instagram"><span class="channel-dot instagram"></span>Instagram <span class="count-badge">3</span></button>
-          </div>
-          <div class="channel-filter-dropdown" style="display:none;">
-            <select id="mobileChannelFilter" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 12px;font-size:12px;">
-              <option value="all">All Channels</option>
-              <option value="whatsapp">WhatsApp</option>
-              <option value="facebook">Facebook</option>
-              <option value="instagram">Instagram</option>
-            </select>
           </div>
           <div class="messages-list" id="messagesList"></div>
         </div>
@@ -1790,6 +1736,45 @@ function renderMessagesList() {
 }
 
 function selectMessage(id) {
+
+// Mobile menu toggle
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.querySelector(".sidebar");
+  const menuBtn = document.querySelector(".topbar");
+  const isMobile = () => window.innerWidth <= 768;
+  
+  // Create menu toggle button if it doesn't exist
+  if (!menuBtn.querySelector(".menu-toggle")) {
+    const menuToggle = document.createElement("button");
+    menuToggle.className = "menu-toggle";
+    menuToggle.innerHTML = "☰";
+    menuToggle.style.display = isMobile() ? "flex" : "none";
+    menuToggle.style.width = "34px";
+    menuToggle.style.height = "34px";
+    menuToggle.style.borderRadius = "8px";
+    menuToggle.style.background = "var(--card)";
+    menuToggle.style.border = "1px solid var(--border)";
+    menuToggle.style.cursor = "pointer";
+    menuToggle.style.color = "var(--text-mid)";
+    menuToggle.style.fontSize = "16px";
+    menuToggle.style.alignItems = "center";
+    menuToggle.style.justifyContent = "center";
+    menuBtn.insertBefore(menuToggle, menuBtn.firstChild);
+    
+    menuToggle.addEventListener("click", () => {
+      if (sidebar) {
+        sidebar.classList.toggle("open");
+      }
+    });
+  }
+  
+  window.addEventListener("resize", () => {
+    if (!isMobile() && sidebar) {
+      sidebar.classList.remove("open");
+    }
+  });
+});
+
   state.selectedMessageId = id;
   const msg = messages.find(m => m.id === id);
   if (!msg) return;
@@ -1797,15 +1782,19 @@ function selectMessage(id) {
 
   renderMessagesList();
   renderDetailPanel(msg);
-  
-  // Show detail panel on mobile
-  if (window.innerWidth <= 768) {
-    const detailPanel = document.querySelector(".detail-panel");
-    if (detailPanel) {
-      detailPanel.classList.add("mobile-show");
-    }
-  }
-}
+
+  // Only show AI suggestion if human has taken over and last message is from customer
+  const lastMsg = msg.conversation[msg.conversation.length - 1];
+  if (lastMsg && lastMsg.dir === 'in' && !msg.aiHandled && msg.needsHuman) {
+    setTimeout(() => {
+      const thinking = document.getElementById('aiSuggestionArea');
+      if (thinking) {
+        thinking.innerHTML = `<div class="ai-suggestion"><div class="ai-thinking">
+          <span class="ai-badge" style="background:var(--accent);color:#000;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:800;">&#10024; IA</span>
+          Navarro AI sugiriendo respuesta
+          <span class="ai-dots"><span></span><span></span><span></span></span>
+        </div></div>`;
+      }
       setTimeout(() => renderAISuggestion(msg), 700);
     }, 200);
   }
@@ -2225,71 +2214,6 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 renderMessagesList();
 // Auto-select first message for demo
 setTimeout(() => selectMessage('m01'), 100);
-
-// Mobile initialization and event handlers
-document.addEventListener("DOMContentLoaded", () => {
-  const sidebar = document.querySelector(".sidebar");
-  const sidebarOverlay = document.querySelector(".sidebar-overlay");
-  const menuToggle = document.querySelector(".menu-toggle");
-  const detailPanel = document.querySelector(".detail-panel");
-  const isMobile = () => window.innerWidth <= 768;
-  
-  // Menu toggle
-  if (menuToggle) {
-    menuToggle.addEventListener("click", () => {
-      if (sidebar) {
-        sidebar.classList.toggle("open");
-      }
-      if (sidebarOverlay) {
-        sidebarOverlay.classList.toggle("open");
-      }
-    });
-  }
-  
-  // Overlay click to close sidebar
-  if (sidebarOverlay) {
-    sidebarOverlay.addEventListener("click", () => {
-      if (sidebar) sidebar.classList.remove("open");
-      sidebarOverlay.classList.remove("open");
-    });
-  }
-  
-  // Add back button to detail panel
-  if (detailPanel && isMobile()) {
-    const detailHeader = detailPanel.querySelector(".detail-header");
-    if (detailHeader && !detailHeader.querySelector(".detail-back-btn")) {
-      const backBtn = document.createElement("button");
-      backBtn.className = "detail-back-btn";
-      backBtn.innerHTML = "← Back";
-      backBtn.style.marginRight = "auto";
-      backBtn.style.order = "-1";
-      backBtn.addEventListener("click", () => {
-        detailPanel.classList.remove("mobile-show");
-      });
-      detailHeader.insertBefore(backBtn, detailHeader.firstChild);
-    }
-  }
-  
-  // Mobile channel filter dropdown
-  const mobileChannelFilter = document.getElementById("mobileChannelFilter");
-  if (mobileChannelFilter) {
-    mobileChannelFilter.addEventListener("change", (e) => {
-      const channel = e.target.value;
-      filterByChannel(channel);
-    });
-  }
-  
-  // Handle window resize
-  window.addEventListener("resize", () => {
-    if (!isMobile() && sidebar) {
-      sidebar.classList.remove("open");
-    }
-    if (!isMobile() && sidebarOverlay) {
-      sidebarOverlay.classList.remove("open");
-    }
-  });
-});
-
 </script>
 </body>
 </html>
