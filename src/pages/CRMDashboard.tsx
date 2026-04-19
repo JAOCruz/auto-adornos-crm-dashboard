@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, Send, LogOut } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, Send } from 'lucide-react';
 import type { Client, Message, MessageChannel } from '../types';
 
 const MOCK_CLIENTS: Client[] = [
@@ -97,13 +95,6 @@ export default function CRMDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [activeChannel, setActiveChannel] = useState<MessageChannel | null>(null);
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   useEffect(() => {
     if (selectedClient) {
@@ -138,35 +129,23 @@ export default function CRMDashboard() {
     : clients;
 
   return (
-    <div className="-m-3 md:-m-8 flex overflow-hidden bg-slate-950" style={{ height: 'calc(100vh - 4rem)' }}>
+    <div className="flex w-full h-full overflow-hidden bg-[#0B1120]">
       {/* Left Panel - Clients List */}
-      <div className={`${showRightPanel && window.innerWidth < 768 ? 'hidden' : 'w-full md:w-96'} flex-shrink-0 border-r border-slate-700 bg-slate-900 flex flex-col`}>
+      <div className={`${showRightPanel && window.innerWidth < 768 ? 'hidden' : 'w-full md:w-96'} flex-shrink-0 border-r border-slate-800 bg-[#0F172A] flex flex-col`}>
         {/* Header */}
-        <div className="p-4 border-b border-slate-700 bg-slate-800 flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-white">Inbox Unificado</h2>
-            <p className="text-xs text-slate-400 mt-1">{filteredClients.length} clientes</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-400">{user?.name}</span>
-            <button
-              onClick={handleLogout}
-              className="p-2 hover:bg-slate-700 rounded transition-colors"
-              title="Cerrar sesión"
-            >
-              <LogOut size={18} className="text-slate-400 hover:text-slate-200" />
-            </button>
-          </div>
+        <div className="p-4 border-b border-slate-800 bg-[#0F172A]/50 flex flex-col gap-2">
+          <h2 className="text-lg font-bold text-white">Inbox Unificado</h2>
+          <p className="text-xs text-slate-400">{filteredClients.length} clientes</p>
         </div>
 
         {/* Channel Filter */}
-        <div className="flex gap-2 p-3 border-b border-slate-700 overflow-x-auto">
+        <div className="flex gap-2 p-3 border-b border-slate-800 overflow-x-auto bg-[#0F172A]/30">
           <button
             onClick={() => setActiveChannel(null)}
-            className={`px-3 py-1 rounded text-sm whitespace-nowrap transition-colors ${
+            className={`px-3 py-1.5 rounded text-sm whitespace-nowrap transition-all ${
               activeChannel === null
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50'
+                : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 border border-slate-800'
             }`}
           >
             Todos
@@ -175,10 +154,10 @@ export default function CRMDashboard() {
             <button
               key={ch}
               onClick={() => setActiveChannel(ch)}
-              className={`px-3 py-1 rounded text-sm whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded text-sm whitespace-nowrap transition-all ${
                 activeChannel === ch
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                  ? 'bg-blue-600/20 text-blue-400 border border-blue-500/50'
+                  : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 border border-slate-800'
               }`}
             >
               {channelIcons[ch]}
@@ -187,15 +166,15 @@ export default function CRMDashboard() {
         </div>
 
         {/* Clients List */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto custom-scroll">
           {filteredClients.map(client => (
             <button
               key={client.id}
               onClick={() => handleSelectClient(client)}
-              className={`w-full text-left p-4 border-b border-slate-700 transition-colors ${
+              className={`w-full text-left p-4 border-b border-slate-800 transition-all ${
                 selectedClient?.id === client.id
-                  ? 'bg-slate-800 border-l-4 border-l-blue-500'
-                  : 'hover:bg-slate-800/50'
+                  ? 'bg-slate-800/50 border-l-4 border-l-blue-500'
+                  : 'hover:bg-slate-800/30'
               }`}
             >
               <div className="flex items-start justify-between gap-2">
@@ -224,14 +203,14 @@ export default function CRMDashboard() {
 
       {/* Right Panel - Chat */}
       {selectedClient && (
-        <div className={`${!showRightPanel && window.innerWidth < 768 ? 'hidden' : 'flex-1'} flex flex-col overflow-hidden`}>
+        <div className={`${!showRightPanel && window.innerWidth < 768 ? 'hidden' : 'flex-1'} flex flex-col overflow-hidden bg-[#0B1120]`}>
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-slate-700 bg-slate-900">
+          <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-[#0F172A]/50">
             <div className="flex items-center gap-3">
               {window.innerWidth < 768 && (
                 <button
                   onClick={() => setShowRightPanel(false)}
-                  className="p-1 hover:bg-slate-800 rounded"
+                  className="p-1 hover:bg-slate-800/50 rounded"
                 >
                   <ChevronLeft size={20} className="text-slate-400" />
                 </button>
@@ -247,7 +226,7 @@ export default function CRMDashboard() {
           </div>
 
           {/* Client Info */}
-          <div className="p-4 bg-slate-800/50 border-b border-slate-700">
+          <div className="p-4 bg-[#0F172A]/30 border-b border-slate-800">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-xs text-slate-400 uppercase">Vehículo</p>
@@ -261,13 +240,13 @@ export default function CRMDashboard() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scroll">
             {messages.map(msg => (
               <div key={msg.id} className={`flex ${msg.direction === 'outbound' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-xs px-4 py-2 rounded-lg ${
                   msg.direction === 'outbound'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-800 text-slate-200'
+                    ? 'bg-blue-600/80 text-white'
+                    : 'bg-slate-800/60 text-slate-200'
                 }`}>
                   <p className="text-sm">{msg.content}</p>
                   <p className="text-xs mt-1 opacity-70">
@@ -279,19 +258,19 @@ export default function CRMDashboard() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-slate-700 bg-slate-900 flex gap-2">
+          <div className="p-4 border-t border-slate-800 bg-[#0F172A]/50 flex gap-2">
             <input
               type="text"
               value={newMessage}
               onChange={e => setNewMessage(e.target.value)}
               onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
               placeholder="Escribe un mensaje..."
-              className="flex-1 bg-slate-800 text-white px-4 py-2 rounded border border-slate-700 focus:border-blue-500 focus:outline-none text-sm"
+              className="flex-1 bg-slate-800/50 text-white px-4 py-2 rounded border border-slate-800 focus:border-blue-500 focus:outline-none text-sm placeholder:text-slate-500"
             />
             <button
               onClick={handleSendMessage}
               disabled={!newMessage.trim()}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 text-white px-4 py-2 rounded transition-colors flex items-center gap-2"
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700/50 disabled:cursor-not-allowed text-white px-4 py-2 rounded transition-colors flex items-center gap-2 font-semibold"
             >
               <Send size={16} />
             </button>

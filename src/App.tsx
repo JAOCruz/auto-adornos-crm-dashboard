@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import DashboardLayout from './components/DashboardLayout';
 import CRMDashboard from './pages/CRMDashboard';
 import LoginPage from './pages/LoginPage';
 
@@ -14,7 +15,9 @@ export default function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <CRMDashboard />
+                <DashboardLayout>
+                  <CRMDashboard />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
