@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Adornos Navarro — CRM</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0F1419;
+    --bg-soft: #161B22;
+    --card: #1C2128;
+    --card-hover: #252B33;
+    --border: #30363D;
+    --border-soft: #21262D;
+    --text: #E6EDF3;
+    --text-mid: #8B949E;
+    --text-light: #6E7681;
+    --accent: #F0B429;
+    --accent-dark: #C78E0B;
+    --whatsapp: #25D366;
+    --facebook: #1877F2;
+    --instagram: #E4405F;
+    --tiktok: #FF0050;
+    --status-new: #3B82F6;
+    --status-progress: #F59E0B;
+    --status-responded: #10B981;
+    --status-lost: #6B7280;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* LAYOUT */
+  .app {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 60px 1fr;
+    height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    grid-column: 1 / 3;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: 900;
+    font-size: 14px;
+  }
+  .brand-name { display: flex; flex-direction: column; line-height: 1.2; }
+  .brand-name .sub { font-size: 10px; font-weight: 500; color: var(--text-mid); }
+
+  .search-wrap {
+    flex: 1;
+    max-width: 420px;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px 8px 34px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 14px;
+  }
+
+  .top-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .top-action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-mid);
+    position: relative;
+  }
+  .top-action-btn .badge-dot {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px 4px 4px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667EEA, #764BA2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .user-name { font-size: 12px; font-weight: 600; }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--bg-soft);
+    border-right: 1px solid var(--border);
+    padding: 16px 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sidebar-section {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    padding: 14px 12px 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 13px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .nav-item:hover { background: var(--card); color: var(--text); }
+  .nav-item.active {
+    background: var(--card);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .nav-item .icon { width: 18px; margin-right: 10px; font-size: 14px; }
+  .nav-item .count {
+    background: var(--border);
+    color: var(--text-mid);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .nav-item.active .count { background: var(--accent); color: #000; }
+  .channel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .channel-dot.whatsapp { background: var(--whatsapp); }
+  .channel-dot.facebook { background: var(--facebook); }
+  .channel-dot.instagram { background: var(--instagram); }
+  .channel-dot.tiktok { background: var(--tiktok); }
+
+  /* MAIN CONTENT */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+  }
+  .main.with-detail {
+    grid-template-columns: 380px 1fr;
+  }
+
+  /* VIEW SWITCHING */
+  .view { display: none; height: 100%; overflow: hidden; }
+  .view.active { display: block; }
+
+  /* INBOX LAYOUT */
+  .inbox-view {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    height: 100%;
+  }
+
+  /* INBOX LIST */
+  .inbox-list {
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .inbox-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .inbox-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .inbox-subtitle {
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+
+  .channel-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .channel-tab {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-mid);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+  .channel-tab:hover { background: var(--card); color: var(--text); }
+  .channel-tab.active {
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .channel-tab .count-badge {
+    background: var(--border);
+    color: var(--text-mid);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+  .channel-tab.active .count-badge { background: var(--accent); color: #000; }
+
+  .messages-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .message-item {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .message-item:hover { background: var(--bg-soft); }
+  .message-item.selected {
+    background: var(--card);
+    border-left: 3px solid var(--accent);
+    padding-left: 17px;
+  }
+  .message-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-50%);
+  }
+
+  .msg-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .msg-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #667EEA, #764BA2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    position: relative;
+  }
+  .msg-avatar .channel-icon {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #fff;
+  }
+  .msg-avatar .channel-icon.whatsapp { background: var(--whatsapp); }
+  .msg-avatar .channel-icon.facebook { background: var(--facebook); }
+  .msg-avatar .channel-icon.instagram { background: var(--instagram); }
+  .msg-avatar .channel-icon.tiktok { background: var(--tiktok); }
+
+  .msg-name-row {
+    flex: 1;
+    min-width: 0;
+  }
+  .msg-name {
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .msg-time {
+    font-size: 11px;
+    color: var(--text-light);
+    flex-shrink: 0;
+  }
+  .msg-preview {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .msg-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .msg-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .status-nuevo { background: rgba(59,130,246,0.15); color: var(--status-new); }
+  .status-progreso { background: rgba(245,158,11,0.15); color: var(--status-progress); }
+  .status-respondido { background: rgba(16,185,129,0.15); color: var(--status-responded); }
+  .status-perdido { background: rgba(107,114,128,0.15); color: var(--status-lost); }
+
+  .msg-vehicle {
+    font-size: 10px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* DETAIL PANEL */
+  .detail-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+  }
+  .detail-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-light);
+  }
+  .detail-empty-icon {
+    font-size: 48px;
+    opacity: 0.3;
+  }
+
+  .detail-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .detail-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667EEA, #764BA2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .detail-title-wrap { flex: 1; }
+  .detail-name { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+  .detail-meta {
+    font-size: 12px;
+    color: var(--text-mid);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .detail-meta-item { display: flex; align-items: center; gap: 5px; }
+  .detail-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .detail-icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 7px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-mid);
+    font-size: 14px;
+  }
+  .detail-icon-btn:hover { background: var(--card-hover); color: var(--text); }
+
+  .detail-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    overflow: hidden;
+  }
+
+  /* CONVERSATION */
+  .conversation {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+  }
+  .messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .msg-bubble-wrap {
+    display: flex;
+    gap: 8px;
+    max-width: 75%;
+  }
+  .msg-bubble-wrap.outgoing {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  .msg-bubble.incoming {
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-bottom-left-radius: 4px;
+  }
+  .msg-bubble.outgoing {
+    background: var(--accent);
+    color: #000;
+    border-bottom-right-radius: 4px;
+  }
+  .msg-bubble.outgoing.bot {
+    background: linear-gradient(135deg, #2A2E3A, #1E2128);
+    color: #fff;
+    border: 1px solid rgba(240,180,41,0.3);
+    position: relative;
+  }
+  .msg-timestamp {
+    font-size: 10px;
+    color: var(--text-light);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .msg-bubble-wrap.outgoing .msg-timestamp { justify-content: flex-end; }
+  .bot-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(240,180,41,0.1);
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .handoff-marker {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-mid);
+    padding: 8px 12px;
+    margin: 8px auto;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    max-width: 70%;
+    border: 1px dashed var(--border);
+  }
+  .handoff-marker strong { color: var(--accent); }
+
+  /* Bot status banner above messages */
+  .bot-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: linear-gradient(90deg, rgba(240,180,41,0.08), transparent);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .bot-banner .bot-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 11px;
+  }
+  .bot-banner .bot-status { flex: 1; }
+  .bot-banner .bot-status strong { color: var(--accent); }
+  .bot-banner .bot-status .sub { font-size: 10px; color: var(--text-mid); display: block; }
+  .bot-takeover-btn {
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .day-separator {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 12px 0;
+    position: relative;
+  }
+  .day-separator::before, .day-separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 80px;
+    height: 1px;
+    background: var(--border);
+  }
+  .day-separator::before { left: 50%; transform: translateX(-120%); }
+  .day-separator::after { left: 50%; transform: translateX(20%); }
+
+  /* REPLY BOX */
+  .reply-box {
+    padding: 14px 24px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .quick-replies {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .quick-reply {
+    padding: 4px 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    font-size: 11px;
+    color: var(--text-mid);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .quick-reply:hover {
+    background: var(--card-hover);
+    color: var(--text);
+  }
+  .reply-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .reply-wrap:focus-within { border-color: var(--accent); }
+  .reply-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    min-height: 36px;
+    max-height: 120px;
+    line-height: 1.5;
+    padding: 8px 0;
+  }
+  .reply-tools {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding-bottom: 4px;
+  }
+  .reply-tool-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-mid);
+  }
+  .reply-tool-btn:hover { background: var(--border-soft); color: var(--text); }
+  .send-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .send-btn:hover { background: var(--accent-dark); }
+
+  /* AI SUGGESTION */
+  .ai-suggestion {
+    background: linear-gradient(135deg, rgba(240,180,41,0.08), rgba(240,180,41,0.02));
+    border: 1px solid rgba(240,180,41,0.3);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ai-suggestion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .ai-suggestion-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .ai-suggestion-label .ai-badge {
+    background: var(--accent);
+    color: #000;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .ai-suggestion-dismiss {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    line-height: 1;
+  }
+  .ai-suggestion-dismiss:hover { color: var(--text); }
+  .ai-suggestion-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .ai-suggestion-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .ai-action-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+  }
+  .ai-action-btn:hover { background: var(--card-hover); }
+  .ai-action-btn.primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+  .ai-action-btn.primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .ai-thinking {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-mid);
+    padding: 2px 0;
+  }
+  .ai-dots { display: inline-flex; gap: 2px; }
+  .ai-dots span {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--accent);
+    animation: aiPulse 1.2s infinite;
+  }
+  .ai-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .ai-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes aiPulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* AI AUTO-REPLY TOGGLE */
+  .ai-auto-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+  .ai-auto-toggle .ai-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .ai-auto-toggle .ai-text { flex: 1; }
+  .ai-auto-toggle .ai-text strong { color: var(--text); }
+  .ai-auto-toggle .ai-text .sub { display: block; font-size: 10px; color: var(--text-mid); margin-top: 1px; }
+  .toggle-switch {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle-switch.on { background: var(--accent); }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: left 0.2s;
+  }
+  .toggle-switch.on::after { left: 18px; }
+
+  /* CUSTOMER INFO PANEL */
+  .customer-info {
+    padding: 20px;
+    overflow-y: auto;
+  }
+  .info-section { margin-bottom: 24px; }
+  .info-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 10px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 13px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { color: var(--text-mid); }
+  .info-value { color: var(--text); font-weight: 500; text-align: right; }
+
+  .status-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .status-btn {
+    padding: 8px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-mid);
+  }
+  .status-btn.active.status-nuevo { background: rgba(59,130,246,0.15); border-color: var(--status-new); color: var(--status-new); }
+  .status-btn.active.status-progreso { background: rgba(245,158,11,0.15); border-color: var(--status-progress); color: var(--status-progress); }
+  .status-btn.active.status-respondido { background: rgba(16,185,129,0.15); border-color: var(--status-responded); color: var(--status-responded); }
+  .status-btn.active.status-perdido { background: rgba(107,114,128,0.15); border-color: var(--status-lost); color: var(--status-lost); }
+
+  .vehicle-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+
+  /* DASHBOARD VIEW */
+  .dashboard-view {
+    padding: 24px 32px;
+    overflow-y: auto;
+    height: 100%;
+  }
+  .dashboard-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .dashboard-subtitle {
+    color: var(--text-mid);
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .stat-delta {
+    font-size: 11px;
+    color: var(--status-responded);
+    font-weight: 600;
+  }
+  .stat-delta.down { color: #EF4444; }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .chart-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .chart-subtitle {
+    font-size: 11px;
+    color: var(--text-mid);
+    margin-bottom: 16px;
+  }
+
+  /* BAR CHART */
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 160px;
+    padding-bottom: 20px;
+    position: relative;
+  }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+  }
+  .bar-stack {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-seg {
+    width: 100%;
+    transition: opacity 0.15s;
+  }
+  .bar-seg:hover { opacity: 0.8; }
+  .bar-seg.whatsapp { background: var(--whatsapp); }
+  .bar-seg.facebook { background: var(--facebook); }
+  .bar-seg.instagram { background: var(--instagram); }
+  .bar-seg.tiktok { background: var(--tiktok); }
+  .bar-label {
+    font-size: 10px;
+    color: var(--text-light);
+    position: absolute;
+    bottom: -16px;
+    font-weight: 500;
+  }
+
+  .chart-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+  .chart-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  /* DONUT */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px 0;
+  }
+  .donut {
+    width: 140px;
+    height: 140px;
+    position: relative;
+  }
+  .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .donut-value {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .donut-label {
+    font-size: 10px;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+  .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .donut-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .donut-legend-label { color: var(--text-mid); flex: 1; }
+  .donut-legend-val { font-weight: 700; }
+
+  /* RECENT ACTIVITY */
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 12px;
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .activity-text { flex: 1; color: var(--text); }
+  .activity-text strong { color: var(--text); }
+  .activity-time { font-size: 10px; color: var(--text-light); }
+
+  /* Responsive handling */
+  @media (max-width: 1100px) {
+    .detail-body { grid-template-columns: 1fr; }
+    .customer-info { display: none; }
+  }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-light); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-logo">AN</div>
+      <div class="brand-name">
+        Auto Adornos Navarro
+        <span class="sub">CRM + Replies</span>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Buscar clientes, mensajes, vehiculos...">
+    </div>
+    <div class="top-actions">
+      <div class="top-action-btn" title="Notifications">
+        &#128276;
+        <span class="badge-dot"></span>
+      </div>
+      <div class="top-action-btn" title="Settings">&#9881;</div>
+      <div class="user-pill">
+        <div class="user-avatar">RN</div>
+        <div class="user-name">Reynaldo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">Principal</div>
+    <div class="nav-item active" data-view="inbox">
+      <div style="display:flex;align-items:center;">
+        <span class="icon">&#9993;</span>Inbox
+      </div>
+      <span class="count" id="navInboxCount">12</span>
+    </div>
+    <div class="nav-item" data-view="dashboard">
+      <div style="display:flex;align-items:center;">
+        <span class="icon">&#128200;</span>Dashboard
+      </div>
+    </div>
+    <div class="nav-item" data-view="contacts">
+      <div style="display:flex;align-items:center;">
+        <span class="icon">&#128100;</span>Clientes
+      </div>
+      <span class="count" id="navContactsCount">24</span>
+    </div>
+
+    <div class="sidebar-section">Canales</div>
+    <div class="nav-item" data-channel-filter="whatsapp">
+      <div style="display:flex;align-items:center;">
+        <span class="channel-dot whatsapp"></span>WhatsApp
+      </div>
+      <span class="count">6</span>
+    </div>
+    <div class="nav-item" data-channel-filter="facebook">
+      <div style="display:flex;align-items:center;">
+        <span class="channel-dot facebook"></span>Facebook
+      </div>
+      <span class="count">3</span>
+    </div>
+    <div class="nav-item" data-channel-filter="instagram">
+      <div style="display:flex;align-items:center;">
+        <span class="channel-dot instagram"></span>Instagram
+      </div>
+      <span class="count">3</span>
+    </div>
+
+    <div class="sidebar-section">Estados</div>
+    <div class="nav-item" data-status-filter="nuevo">
+      <div style="display:flex;align-items:center;">
+        <span class="channel-dot" style="background:var(--status-new);"></span>Nuevos
+      </div>
+      <span class="count">6</span>
+    </div>
+    <div class="nav-item" data-status-filter="progreso">
+      <div style="display:flex;align-items:center;">
+        <span class="channel-dot" style="background:var(--status-progress);"></span>En Progreso
+      </div>
+      <span class="count">3</span>
+    </div>
+    <div class="nav-item" data-status-filter="respondido">
+      <div style="display:flex;align-items:center;">
+        <span class="channel-dot" style="background:var(--status-responded);"></span>Respondidos
+      </div>
+      <span class="count">2</span>
+    </div>
+    <div class="nav-item" data-status-filter="perdido">
+      <div style="display:flex;align-items:center;">
+        <span class="channel-dot" style="background:var(--status-lost);"></span>Perdidos
+      </div>
+      <span class="count">1</span>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- INBOX VIEW -->
+    <div class="view active" id="inboxView">
+      <div class="inbox-view">
+        <div class="inbox-list">
+          <div class="inbox-header">
+            <div class="inbox-title">Inbox Unificado</div>
+            <div class="inbox-subtitle" id="inboxSubtitle">12 mensajes &middot; 6 sin leer</div>
+          </div>
+          <div class="channel-tabs">
+            <button class="channel-tab active" data-channel="all">Todos <span class="count-badge" id="cntAll">12</span></button>
+            <button class="channel-tab" data-channel="whatsapp"><span class="channel-dot whatsapp"></span>WhatsApp <span class="count-badge">6</span></button>
+            <button class="channel-tab" data-channel="facebook"><span class="channel-dot facebook"></span>Facebook <span class="count-badge">3</span></button>
+            <button class="channel-tab" data-channel="instagram"><span class="channel-dot instagram"></span>Instagram <span class="count-badge">3</span></button>
+          </div>
+          <div class="messages-list" id="messagesList"></div>
+        </div>
+
+        <div class="detail-panel" id="detailPanel">
+          <div class="detail-empty">
+            <div class="detail-empty-icon">&#128236;</div>
+            <div>Selecciona un mensaje para ver los detalles</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div class="view" id="dashboardView">
+      <div class="dashboard-view">
+        <div class="dashboard-title">Dashboard</div>
+        <div class="dashboard-subtitle">Resumen de actividad &middot; Abril 2026</div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Mensajes Hoy</div>
+            <div class="stat-value">47</div>
+            <div class="stat-delta">&#8593; 18% vs ayer</div>
+          </div>
+          <div class="stat-card" style="border-color:rgba(240,180,41,0.3);background:linear-gradient(135deg,rgba(240,180,41,0.05),transparent);">
+            <div class="stat-label" style="color:var(--accent);">&#10024; Respondidos por IA</div>
+            <div class="stat-value">87%</div>
+            <div class="stat-delta">41 de 47 sin intervencion</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Tiempo Respuesta IA</div>
+            <div class="stat-value">&lt;5s</div>
+            <div class="stat-delta">Respuesta instantanea</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Conversion a Venta</div>
+            <div class="stat-value">34%</div>
+            <div class="stat-delta">&#8593; 6% vs mes pasado</div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-title">Mensajes por Dia &middot; Ultima Semana</div>
+            <div class="chart-subtitle">Distribucion por canal</div>
+            <div class="bar-chart" id="barChart"></div>
+            <div class="chart-legend">
+              <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--whatsapp)"></div>WhatsApp</div>
+              <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--facebook)"></div>Facebook</div>
+              <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--instagram)"></div>Instagram</div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-title">Estados Actuales</div>
+            <div class="chart-subtitle">Todas las conversaciones</div>
+            <div class="donut-wrap">
+              <div class="donut">
+                <svg viewBox="0 0 36 36" width="140" height="140">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--border)" stroke-width="3"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--status-new)" stroke-width="3"
+                    stroke-dasharray="50 100" stroke-dashoffset="25" transform="rotate(-90 18 18)"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--status-progress)" stroke-width="3"
+                    stroke-dasharray="25 100" stroke-dashoffset="-25" transform="rotate(-90 18 18)"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--status-responded)" stroke-width="3"
+                    stroke-dasharray="17 100" stroke-dashoffset="-50" transform="rotate(-90 18 18)"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--status-lost)" stroke-width="3"
+                    stroke-dasharray="8 100" stroke-dashoffset="-67" transform="rotate(-90 18 18)"/>
+                </svg>
+                <div class="donut-center">
+                  <div class="donut-value">24</div>
+                  <div class="donut-label">Total</div>
+                </div>
+              </div>
+              <div class="donut-legend">
+                <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--status-new)"></div><span class="donut-legend-label">Nuevos</span><span class="donut-legend-val">12</span></div>
+                <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--status-progress)"></div><span class="donut-legend-label">En Progreso</span><span class="donut-legend-val">6</span></div>
+                <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--status-responded)"></div><span class="donut-legend-label">Respondidos</span><span class="donut-legend-val">4</span></div>
+                <div class="donut-legend-item"><div class="donut-legend-dot" style="background:var(--status-lost)"></div><span class="donut-legend-label">Perdidos</span><span class="donut-legend-val">2</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Actividad Reciente</div>
+          <div class="chart-subtitle">Ultimas interacciones y conversiones</div>
+          <div class="activity-list" id="activityList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACTS VIEW -->
+    <div class="view" id="contactsView">
+      <div class="dashboard-view">
+        <div class="dashboard-title">Clientes</div>
+        <div class="dashboard-subtitle">Base de datos unificada desde todos los canales</div>
+        <div id="contactsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// MOCK DATA
+const customers = {
+  c01: { name: 'Carlos Mendez', phone: '+1 809-555-0142', vehicle: 'Toyota Corolla 2019 Blanco', channel: 'whatsapp', handle: '+1 809-555-0142' },
+  c02: { name: 'Maria Perez', phone: '+1 829-555-0198', vehicle: 'Honda CR-V 2022 Negro', channel: 'instagram', handle: '@maria.perez.rd' },
+  c03: { name: 'Luis Fernandez', phone: '+1 849-555-0177', vehicle: 'Nissan Sentra 2020 Gris', channel: 'facebook', handle: 'Luis Fernandez Perez' },
+  c04: { name: 'Ana Rodriguez', phone: '+1 809-555-0311', vehicle: 'Kia Rio 2021 Rojo', channel: 'whatsapp', handle: '+1 809-555-0311' },
+  c05: { name: 'Pedro Gomez', phone: '+1 829-555-0244', vehicle: 'Hyundai Tucson 2023 Azul', channel: 'whatsapp', handle: '+1 829-555-0244' },
+  c06: { name: 'Julia Santana', phone: '+1 849-555-0155', vehicle: 'Toyota RAV4 2020 Plata', channel: 'instagram', handle: '@julia.santana_' },
+  c07: { name: 'Roberto Diaz', phone: '+1 809-555-0409', vehicle: 'Mitsubishi Lancer 2018 Negro', channel: 'whatsapp', handle: '+1 809-555-0409' },
+  c08: { name: 'Carmen Lopez', phone: '+1 829-555-0522', vehicle: 'Ford Escape 2021 Blanco', channel: 'facebook', handle: 'Carmen Lopez R.' },
+  c09: { name: 'Miguel Torres', phone: '+1 849-555-0688', vehicle: 'Chevrolet Captiva 2019 Rojo', channel: 'whatsapp', handle: '+1 849-555-0688' },
+  c10: { name: 'Sofia Martinez', phone: '+1 809-555-0733', vehicle: 'Mazda CX-5 2022 Gris', channel: 'instagram', handle: '@sofia.martinez' },
+  c11: { name: 'Jorge Castillo', phone: '+1 829-555-0811', vehicle: 'Jeep Cherokee 2020 Negro', channel: 'facebook', handle: 'Jorge A. Castillo' },
+  c12: { name: 'Patricia Reyes', phone: '+1 849-555-0922', vehicle: 'Honda Civic 2021 Blanco', channel: 'whatsapp', handle: '+1 849-555-0922' },
+};
+
+const messages = [
+  {
+    id: 'm01', customerId: 'c01', channel: 'whatsapp',
+    preview: 'Perfecto, paso manana a las 10am entonces. Gracias!',
+    time: 'hace 3 min', fullTime: 'Hoy, 2:34 PM', unread: true, status: 'progreso', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Buenas tardes', time: '2:32 PM' },
+      { dir: 'out', bot: true, text: 'Buenas tardes! Bienvenido a Auto Adornos Navarro. En que le puedo ayudar hoy?', time: '2:32 PM' },
+      { dir: 'in', text: 'Quisiera cotizar unos aros para mi Toyota Corolla 2019. Busco algo deportivo, talla 17 pulgadas.', time: '2:33 PM' },
+      { dir: 'out', bot: true, text: 'Excelente eleccion Carlos! Para su Toyota Corolla 2019 tenemos varias opciones en aros deportivos de 17":\n\n• Enkei RPF1 Negro Mate — $22,000 el juego\n• Rota Grid Titanium — $26,000 el juego\n• TSW Nurburgring — $28,500 el juego\n\nTodos incluyen instalacion, balanceo y valvulas nuevas. Garantia de 1 ano.', time: '2:33 PM' },
+      { dir: 'in', text: 'Vi en su Instagram unos aros negros mate que me gustaron mucho', time: '2:34 PM' },
+      { dir: 'out', bot: true, text: 'Esos son los Enkei RPF1 Negro Mate! Estan disponibles en stock. Puede pasar a verlos al taller o agendamos una cita. Estamos en Av. 27 de Febrero #245. Horario: Lun-Vie 9am-6pm, Sabados 9am-4pm.', time: '2:34 PM' },
+      { dir: 'in', text: 'Perfecto, paso manana a las 10am entonces. Gracias!', time: '2:34 PM' }
+    ]
+  },
+  {
+    id: 'm02', customerId: 'c02', channel: 'instagram',
+    preview: 'Listo, agendeme para el jueves por la manana',
+    time: 'hace 12 min', fullTime: 'Hoy, 2:25 PM', unread: true, status: 'progreso', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Hola! Cuanto cuesta tintar los cristales de un Honda CR-V? Necesito que sea antivandalico.', time: '2:22 PM' },
+      { dir: 'out', bot: true, text: 'Hola Maria! Con gusto le cotizo. Para tintado antivandalico de Honda CR-V manejamos 2 opciones premium:\n\n• 3M Ceramica IR — $9,500 (bloqueo UV 99%, IR 95%)\n• Llumar ATC Security — $12,000 (antivandalico certificado, resiste impactos)\n\nAmbos con garantia de 5 anos e instalacion incluida. El trabajo toma 3-4 horas.', time: '2:23 PM' },
+      { dir: 'in', text: 'Es el modelo 2022 negro', time: '2:24 PM' },
+      { dir: 'out', bot: true, text: 'Perfecto, para el CR-V 2022 el Llumar ATC Security queda espectacular con el color negro. Le gustaria agendar? Tengo disponibilidad el miercoles 9am, jueves 10am o viernes 2pm.', time: '2:24 PM' },
+      { dir: 'in', text: 'Listo, agendeme para el jueves por la manana', time: '2:25 PM' }
+    ]
+  },
+  {
+    id: 'm03', customerId: 'c03', channel: 'facebook',
+    preview: 'Necesito que me confirme si me pueden hacer descuento por pagar en efectivo',
+    time: 'hace 28 min', fullTime: 'Hoy, 2:10 PM', unread: true, status: 'nuevo', needsHuman: true,
+    conversation: [
+      { dir: 'in', text: 'Me pueden instalar una camara de retroceso en mi Nissan Sentra? Que marca recomiendan?', time: '2:08 PM' },
+      { dir: 'out', bot: true, text: 'Hola Luis! Para Nissan Sentra tenemos 3 opciones de camara de retroceso:\n\n• Pioneer HD con sensor — $3,500 (pantalla de 7")\n• JVC KW-V960BW — $6,500 (pantalla 9" touch, CarPlay)\n• Alpine Halo9 — $14,500 (pantalla 9" flotante premium)\n\nTodas incluyen instalacion profesional. Tiempo: 2-3 horas.', time: '2:09 PM' },
+      { dir: 'in', text: 'Perfecto, cuando pueden hacerlo?', time: '2:09 PM' },
+      { dir: 'out', bot: true, text: 'Tenemos disponibilidad manana a las 9am, 11am o 3pm. Cual le conviene? Solo necesita traer el vehiculo al taller en Av. 27 de Febrero #245.', time: '2:10 PM' },
+      { dir: 'in', text: 'Necesito que me confirme si me pueden hacer descuento por pagar en efectivo', time: '2:10 PM' }
+    ]
+  },
+  {
+    id: 'm04', customerId: 'c04', channel: 'whatsapp',
+    preview: 'Gracias por la info, voy a pensarlo y le confirmo en la tarde',
+    time: 'hace 45 min', fullTime: 'Hoy, 1:50 PM', unread: false, status: 'progreso', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Buenas! Necesito cotizar un sistema de sonido completo con subwoofer para mi Kia Rio 2021', time: '1:45 PM' },
+      { dir: 'out', bot: true, text: 'Buenas Ana! Con gusto. Para Kia Rio 2021 tenemos 3 paquetes de sonido completos:\n\n• PAQUETE BASICO — $15,000\n  4 bocinas Pioneer + radio touch 7"\n\n• PAQUETE MEDIO — $28,000 (mas popular)\n  4 bocinas + subwoofer 10" + amplificador 4 canales + radio touch 9" CarPlay\n\n• PAQUETE PREMIUM — $45,000\n  Full setup competencia: 6 bocinas JL Audio + sub 12" + 2 amps + DSP\n\nTodos con garantia e instalacion.', time: '1:46 PM' },
+      { dir: 'in', text: 'El del medio suena interesante, cuanto tiempo toma la instalacion?', time: '1:48 PM' },
+      { dir: 'out', bot: true, text: 'El paquete medio toma 5-6 horas de instalacion. Puede dejar el carro en la manana y recogerlo en la tarde, o agendamos para un dia completo. Aceptamos transferencia, efectivo y tarjeta. Tambien hay opcion de pago en 2 cuotas.', time: '1:49 PM' },
+      { dir: 'in', text: 'Gracias por la info, voy a pensarlo y le confirmo en la tarde', time: '1:50 PM' }
+    ]
+  },
+  {
+    id: 'm05', customerId: 'c05', channel: 'whatsapp',
+    preview: 'Genial! Donde estan ubicados?',
+    time: 'hace 1 h', fullTime: 'Hoy, 1:30 PM', unread: true, status: 'progreso', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Vi su contenido en Instagram sobre spoilers! Cuanto cobran por instalar uno en un Hyundai Tucson 2023?', time: '1:28 PM' },
+      { dir: 'out', bot: true, text: 'Hola Pedro! Gracias por ver nuestro contenido :) Para Hyundai Tucson 2023 tenemos spoilers en 2 materiales:\n\n• ABS pintado al color del carro — $4,200\n• Fibra de carbono real — $8,500\n\nAmbos con instalacion incluida (1-2 horas) y garantia. Hacemos match perfecto con el color de su Tucson azul.', time: '1:29 PM' },
+      { dir: 'in', text: 'Genial! Donde estan ubicados?', time: '1:30 PM' }
+    ]
+  },
+  {
+    id: 'm06', customerId: 'c06', channel: 'instagram',
+    preview: 'Hecho! Nos vemos a las 9am',
+    time: 'hace 2 h', fullTime: 'Hoy, 12:45 PM', unread: false, status: 'respondido', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Buenas, quiero pulir los aros de mi Toyota RAV4, estan muy rayados', time: '12:45 PM' },
+      { dir: 'out', bot: true, text: 'Buenas Julia! Claro, hacemos pulido profesional de aros. Para su Toyota RAV4:\n\n• Pulido basico — $500 por aro ($2,000 los 4)\n• Pulido premium con sellador — $800 por aro ($3,200 los 4)\n\nEntrega al dia siguiente. Puede traerlos o los retiramos si esta cerca.', time: '12:52 PM' },
+      { dir: 'in', text: 'Perfecto, cuando puedo llevarlos?', time: '12:55 PM' },
+      { dir: 'out', bot: true, text: 'Tenemos disponibilidad manana desde las 9am. Si los deja antes de las 10am los entregamos al final del dia siguiente. Horario: Lun-Vie 9am-6pm.', time: '1:00 PM' },
+      { dir: 'in', text: 'Hecho! Nos vemos a las 9am', time: '1:02 PM' }
+    ]
+  },
+  {
+    id: 'm07', customerId: 'c07', channel: 'whatsapp',
+    preview: 'Perfecto, alla estare el sabado temprano',
+    time: 'hace 3 h', fullTime: 'Hoy, 11:20 AM', unread: false, status: 'respondido', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Estan abiertos el sabado? Quiero llevar mi Mitsubishi Lancer para ponerle stickers deportivos', time: '11:18 AM' },
+      { dir: 'out', bot: true, text: 'Hola Roberto! Si, sabados abiertos 9am a 4pm. Para stickers deportivos en Mitsubishi Lancer manejamos:\n\n• Kit simple (franjas laterales) — $800\n• Kit medio (franjas + capo) — $2,200\n• Kit completo racing (full wrap parcial) — $4,500\n\nTrae diseno o escoge del catalogo en taller. Instalacion 2-4 horas segun el kit.', time: '11:19 AM' },
+      { dir: 'in', text: 'Perfecto, alla estare el sabado temprano', time: '11:20 AM' }
+    ]
+  },
+  {
+    id: 'm08', customerId: 'c08', channel: 'facebook',
+    preview: 'Si, alla estare a las 10am',
+    time: 'ayer', fullTime: 'Ayer, 5:40 PM', unread: false, status: 'respondido', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Hola, me enviaron un presupuesto por aqui hace una semana por el Ford Escape, ya quiero proceder', time: 'Ayer 5:38 PM' },
+      { dir: 'out', bot: true, text: 'Hola Carmen! Reviso su historial... Veo que le enviamos un presupuesto de $8,500 por forros de cuero sintetico completos + detallado interior para su Ford Escape 2021. El presupuesto sigue vigente.', time: 'Ayer 5:39 PM' },
+      { dir: 'out', bot: true, text: 'Tenemos disponibilidad manana a las 10am o pasado a las 9am. Con cual fecha prefiere proceder?', time: 'Ayer 5:39 PM' },
+      { dir: 'in', text: 'Si, alla estare a las 10am', time: 'Ayer 5:40 PM' }
+    ]
+  },
+  {
+    id: 'm09', customerId: 'c09', channel: 'whatsapp',
+    preview: 'Cual es el plazo de instalacion?',
+    time: 'ayer', fullTime: 'Ayer, 3:15 PM', unread: false, status: 'progreso', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Buen dia! Tienen luces LED para el Chevrolet Captiva 2019?', time: 'Ayer 3:12 PM' },
+      { dir: 'out', bot: true, text: 'Buen dia Miguel! Si, tenemos kits LED completos para Chevrolet Captiva 2019:\n\n• Kit basico (faros principales H11) — $2,800\n• Kit medio (faros + antinieblas + retroceso) — $5,200\n• Kit premium full (incluye interiores + bajo carro) — $8,500\n\nTodos con ventilador integrado y garantia de 2 anos. Temperatura de color 6000K (blanco puro).', time: 'Ayer 3:13 PM' },
+      { dir: 'in', text: 'Me interesa el medio, incluye instalacion?', time: 'Ayer 3:14 PM' },
+      { dir: 'out', bot: true, text: 'Si, el precio de $5,200 incluye instalacion profesional. No requiere modificaciones al carro ni pierde garantia de fabrica.', time: 'Ayer 3:15 PM' },
+      { dir: 'in', text: 'Cual es el plazo de instalacion?', time: 'Ayer 3:15 PM' }
+    ]
+  },
+  {
+    id: 'm10', customerId: 'c10', channel: 'instagram',
+    preview: 'Puedo ver fotos de trabajos similares?',
+    time: 'ayer', fullTime: 'Ayer, 1:22 PM', unread: false, status: 'progreso', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Cuanto cobran por pintar el techo de negro en un Mazda CX-5 2022?', time: 'Ayer 1:20 PM' },
+      { dir: 'out', bot: true, text: 'Hola Sofia! Para pintar el techo en negro de su Mazda CX-5 2022 tenemos 2 opciones:\n\n• Pintura automotiva (permanente) — $8,500\n  3 capas + barniz, 2 dias de trabajo, garantia 3 anos\n\n• Vinil negro mate/brillante — $4,200\n  Instalacion 1 dia, removible, garantia 2 anos\n\nAmbos incluyen desmontaje y remontaje de moldures.', time: 'Ayer 1:21 PM' },
+      { dir: 'in', text: 'Puedo ver fotos de trabajos similares?', time: 'Ayer 1:22 PM' }
+    ]
+  },
+  {
+    id: 'm11', customerId: 'c11', channel: 'facebook',
+    preview: 'No pude ir, puedo ir la semana que viene?',
+    time: 'hace 2 dias', fullTime: 'Hace 2 dias', unread: false, status: 'perdido', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Pregunte por forros de asiento la semana pasada', time: 'Hace 3 dias' },
+      { dir: 'out', bot: true, text: 'Hola Jorge! Reviso su historial... Le habiamos cotizado forros de cuero sintetico para Jeep Cherokee 2020 por $6,500 juego completo (5 asientos).', time: 'Hace 3 dias' },
+      { dir: 'out', bot: true, text: 'El precio sigue vigente. Podemos agendar para esta semana? Tenemos disponibilidad jueves o viernes.', time: 'Hace 3 dias' },
+      { dir: 'in', text: 'No pude ir, puedo ir la semana que viene?', time: 'Hace 2 dias' }
+    ]
+  },
+  {
+    id: 'm12', customerId: 'c12', channel: 'whatsapp',
+    preview: 'Gracias! Voy el sabado entonces',
+    time: 'hace 3 dias', fullTime: 'Hace 3 dias', unread: false, status: 'respondido', aiHandled: true,
+    conversation: [
+      { dir: 'in', text: 'Hola! Me podrian cotizar un lavado premium para mi Honda Civic 2021? Con cera y detallado interior', time: 'Hace 3 dias' },
+      { dir: 'out', bot: true, text: 'Hola Patricia! Para Honda Civic 2021 el paquete Lavado Premium incluye:\n\n• Lavado exterior profundo\n• Encerado con cera liquida\n• Aspirado y limpieza interior\n• Detallado de tapiceria\n• Limpieza de motor\n• Aromatizacion\n\nPrecio: $2,800 — Toma 3-4 horas. Sin cita necesaria.', time: 'Hace 3 dias' },
+      { dir: 'in', text: 'Gracias! Voy el sabado entonces', time: 'Hace 3 dias' }
+    ]
+  }
+];
+
+// Generate unread counts
+let state = {
+  activeView: 'inbox',
+  activeChannel: 'all',
+  selectedMessageId: null
+};
+
+// Initialize channel tabs click handlers
+document.querySelectorAll('.channel-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.channel-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    state.activeChannel = tab.dataset.channel;
+    renderMessagesList();
+  });
+});
+
+// Sidebar nav items
+document.querySelectorAll('.sidebar .nav-item[data-view]').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    const view = item.dataset.view;
+    state.activeView = view;
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(view + 'View').classList.add('active');
+    if (view === 'contacts') renderContacts();
+    if (view === 'dashboard') renderDashboard();
+  });
+});
+
+document.querySelectorAll('.sidebar .nav-item[data-channel-filter]').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    state.activeChannel = item.dataset.channelFilter;
+    state.activeView = 'inbox';
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('inboxView').classList.add('active');
+    document.querySelectorAll('.channel-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.channel === state.activeChannel);
+    });
+    renderMessagesList();
+  });
+});
+
+// Helpers
+function initials(name) {
+  return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
+}
+
+function channelIcon(ch) {
+  const icons = { whatsapp: 'W', facebook: 'f', instagram: '@', tiktok: 'T' };
+  return icons[ch] || '?';
+}
+
+function statusClass(s) {
+  return 'status-' + s;
+}
+
+function statusLabel(s) {
+  const labels = {
+    nuevo: 'Nuevo',
+    progreso: 'En Progreso',
+    respondido: 'Respondido',
+    perdido: 'Perdido'
+  };
+  return labels[s] || s;
+}
+
+// Render messages list
+function renderMessagesList() {
+  let filtered = messages;
+  if (state.activeChannel !== 'all') {
+    filtered = messages.filter(m => m.channel === state.activeChannel);
+  }
+  const list = document.getElementById('messagesList');
+  const unreadCount = filtered.filter(m => m.unread).length;
+  document.getElementById('inboxSubtitle').textContent = `${filtered.length} mensajes · ${unreadCount} sin leer`;
+
+  list.innerHTML = filtered.map(m => {
+    const c = customers[m.customerId];
+    const isSelected = state.selectedMessageId === m.id;
+    return `
+      <div class="message-item ${m.unread?'unread':''} ${isSelected?'selected':''}" data-id="${m.id}">
+        <div class="msg-header">
+          <div class="msg-avatar">
+            ${initials(c.name)}
+            <div class="channel-icon ${m.channel}">${channelIcon(m.channel)}</div>
+          </div>
+          <div class="msg-name-row">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <div class="msg-name">${c.name}</div>
+              <div class="msg-time">${m.time}</div>
+            </div>
+            <div class="msg-vehicle">&#128663; ${c.vehicle}</div>
+          </div>
+        </div>
+        <div class="msg-preview">${m.preview}</div>
+        <div class="msg-footer">
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="msg-tag ${statusClass(m.status)}">${statusLabel(m.status)}</span>
+            ${m.aiHandled ? '<span class="msg-tag" style="background:rgba(240,180,41,0.15);color:var(--accent);">&#10024; AI</span>' : ''}
+            ${m.needsHuman ? '<span class="msg-tag" style="background:rgba(245,158,11,0.15);color:var(--status-progress);">&#9888; Accion</span>' : ''}
+          </div>
+          <span style="font-size:10px;color:var(--text-light);">${c.phone}</span>
+        </div>
+      </div>
+    `;
+  }).join('') || `<div style="padding:40px 20px;text-align:center;color:var(--text-light);font-size:13px;">No hay mensajes en este canal</div>`;
+
+  // Click handlers
+  document.querySelectorAll('.message-item').forEach(item => {
+    item.addEventListener('click', () => {
+      selectMessage(item.dataset.id);
+    });
+  });
+}
+
+function selectMessage(id) {
+  state.selectedMessageId = id;
+  const msg = messages.find(m => m.id === id);
+  if (!msg) return;
+  msg.unread = false;
+
+  renderMessagesList();
+  renderDetailPanel(msg);
+
+  // Only show AI suggestion if human has taken over and last message is from customer
+  const lastMsg = msg.conversation[msg.conversation.length - 1];
+  if (lastMsg && lastMsg.dir === 'in' && !msg.aiHandled && msg.needsHuman) {
+    setTimeout(() => {
+      const thinking = document.getElementById('aiSuggestionArea');
+      if (thinking) {
+        thinking.innerHTML = `<div class="ai-suggestion"><div class="ai-thinking">
+          <span class="ai-badge" style="background:var(--accent);color:#000;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:800;">&#10024; IA</span>
+          Navarro AI sugiriendo respuesta
+          <span class="ai-dots"><span></span><span></span><span></span></span>
+        </div></div>`;
+      }
+      setTimeout(() => renderAISuggestion(msg), 700);
+    }, 200);
+  }
+}
+
+function renderDetailPanel(msg) {
+  const c = customers[msg.customerId];
+  const panel = document.getElementById('detailPanel');
+
+  panel.innerHTML = `
+    <div class="detail-header">
+      <div class="detail-avatar" style="position:relative;">
+        ${initials(c.name)}
+        <div style="position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;background:var(--${msg.channel});">${channelIcon(msg.channel)}</div>
+      </div>
+      <div class="detail-title-wrap">
+        <div class="detail-name">${c.name}</div>
+        <div class="detail-meta">
+          <div class="detail-meta-item">&#128222; ${c.phone}</div>
+          <div class="detail-meta-item">&#128663; ${c.vehicle}</div>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="detail-icon-btn" title="Llamar">&#128222;</button>
+        <button class="detail-icon-btn" title="Archivar">&#128229;</button>
+        <button class="detail-icon-btn" title="Mas">&#8942;</button>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="conversation">
+        ${msg.aiHandled ? `
+          <div class="bot-banner">
+            <div class="bot-icon">&#10024;</div>
+            <div class="bot-status">
+              <strong>Navarro AI esta manejando esta conversacion</strong>
+              <span class="sub">Respondiendo automaticamente con info del taller &middot; Tu puedes tomar control en cualquier momento</span>
+            </div>
+            <button class="bot-takeover-btn" onclick="takeoverConversation('${msg.id}')">Tomar Control</button>
+          </div>
+        ` : (msg.needsHuman ? `
+          <div class="bot-banner" style="background:linear-gradient(90deg,rgba(245,158,11,0.12),transparent);">
+            <div class="bot-icon" style="background:var(--status-progress);">!</div>
+            <div class="bot-status">
+              <strong style="color:var(--status-progress);">AI solicita atencion humana</strong>
+              <span class="sub">Cliente pide descuento &middot; Requiere decision del equipo</span>
+            </div>
+            <button class="bot-takeover-btn" onclick="takeoverConversation('${msg.id}')">Responder</button>
+          </div>
+        ` : '')}
+        <div class="messages-area" id="messagesArea">
+          <div class="day-separator">${msg.fullTime.includes('Ayer')?'Ayer':(msg.fullTime.includes('Hace')?'Hace dias':'Hoy')}</div>
+          ${msg.conversation.map(c => {
+            if (c.dir === 'in') {
+              return `
+                <div class="msg-bubble-wrap incoming">
+                  <div>
+                    <div class="msg-bubble incoming">${c.text.replace(/\n/g, '<br>')}</div>
+                    <div class="msg-timestamp">${c.time}</div>
+                  </div>
+                </div>
+              `;
+            }
+            const isBot = c.bot;
+            return `
+              <div class="msg-bubble-wrap outgoing">
+                <div>
+                  <div class="msg-bubble outgoing ${isBot ? 'bot' : ''}">${c.text.replace(/\n/g, '<br>')}</div>
+                  <div class="msg-timestamp">
+                    ${isBot ? '<span class="bot-label">&#10024; NAVARRO AI</span>' : '<span class="bot-label" style="background:rgba(16,185,129,0.15);color:var(--status-responded);">HUMANO</span>'}
+                    <span>${c.time}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="reply-box">
+          <div id="aiSuggestionArea"></div>
+          <div class="quick-replies">
+            <div class="quick-reply" onclick="insertQuickReply(this)">Hola! Gracias por contactarnos.</div>
+            <div class="quick-reply" onclick="insertQuickReply(this)">Le envio cotizacion ahora mismo</div>
+            <div class="quick-reply" onclick="insertQuickReply(this)">Podemos agendar una cita?</div>
+            <div class="quick-reply" onclick="insertQuickReply(this)">Cual es su ubicacion?</div>
+          </div>
+          <div class="reply-wrap">
+            <textarea class="reply-input" id="replyInput" placeholder="Escribe tu respuesta... o deja que Navarro AI sugiera una"></textarea>
+            <div class="reply-tools">
+              <button class="reply-tool-btn" title="Generar con AI" onclick="generateAIReply('${msg.id}')" style="color:var(--accent);">&#10024;</button>
+              <button class="reply-tool-btn" title="Emoji">&#128512;</button>
+              <button class="reply-tool-btn" title="Adjuntar">&#128206;</button>
+              <button class="send-btn" onclick="sendReply('${msg.id}')">Enviar &#8594;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="customer-info">
+        <div class="info-section">
+          <div class="info-label">Navarro AI</div>
+          <div class="ai-auto-toggle">
+            <div class="ai-icon">&#10024;</div>
+            <div class="ai-text">
+              <strong>Auto-Respuestas IA</strong>
+              <span class="sub">Sugiere respuestas automaticas</span>
+            </div>
+            <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-label">Informacion del Cliente</div>
+          <div class="info-row"><span class="info-key">Nombre</span><span class="info-value">${c.name}</span></div>
+          <div class="info-row"><span class="info-key">Telefono</span><span class="info-value">${c.phone}</span></div>
+          <div class="info-row"><span class="info-key">Canal</span><span class="info-value"><span class="channel-dot ${msg.channel}" style="display:inline-block;margin-right:4px;"></span>${msg.channel}</span></div>
+          <div class="info-row"><span class="info-key">Handle</span><span class="info-value" style="font-family:monospace;font-size:11px;">${c.handle}</span></div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-label">Vehiculo</div>
+          <div class="vehicle-tag">&#128663; ${c.vehicle}</div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-label">Estado</div>
+          <div class="status-selector">
+            ${['nuevo', 'progreso', 'respondido', 'perdido'].map(s => `
+              <button class="status-btn status-${s} ${msg.status === s ? 'active' : ''}" onclick="changeStatus('${msg.id}', '${s}')">${statusLabel(s)}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-label">Historial</div>
+          <div style="font-size:11px;color:var(--text-mid);line-height:1.6;">
+            &bull; Primer contacto: ${msg.fullTime}<br>
+            &bull; ${msg.conversation.length} mensajes en conversacion<br>
+            &bull; Ultimo en responder: ${msg.conversation[msg.conversation.length-1].dir === 'out' ? 'Nosotros' : 'Cliente'}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function insertQuickReply(el) {
+  document.getElementById('replyInput').value = el.textContent;
+  document.getElementById('replyInput').focus();
+}
+
+// === NAVARRO AI — Context-aware reply suggestions ===
+function generateAIResponse(msg) {
+  const c = customers[msg.customerId];
+  const lastIn = [...msg.conversation].reverse().find(x => x.dir === 'in');
+  const text = (lastIn ? lastIn.text : msg.preview).toLowerCase();
+  const vehicle = c.vehicle;
+
+  // Pattern matching based on common car-accessory inquiries
+  if (text.includes('aro') || text.includes('rin')) {
+    return `Hola ${c.name.split(' ')[0]}! Gracias por contactarnos. Para su ${vehicle} tenemos varias opciones de aros deportivos en talla 17", 18" y 19". Los precios van desde $18,000 el juego completo de 4 aros deportivos (incluye instalacion y balanceo). Le puedo enviar fotos de los modelos disponibles por aqui mismo. Puede pasar manana a las 10am para verlos en persona?`;
+  }
+  if (text.includes('tintad') || text.includes('tinte') || text.includes('cristal') || text.includes('polariz')) {
+    return `Buenas ${c.name.split(' ')[0]}! Para el tintado de cristales de su ${vehicle} manejamos 3 niveles: Estandar $4,500, Premium antivandalico $7,500, y Ceramica 3M $12,000 (con garantia de 5 anos). Todos incluyen instalacion. El trabajo toma 2-3 horas. Le gustaria agendar para esta semana?`;
+  }
+  if (text.includes('sonid') || text.includes('audio') || text.includes('bocin') || text.includes('subwoofer') || text.includes('amplificad')) {
+    return `Hola ${c.name.split(' ')[0]}! Para sistema de sonido en su ${vehicle} tenemos 3 paquetes populares: Basico (2 bocinas + radio touch) $15,000 — Medio (4 bocinas + sub 10" + amp) $28,000 — Premium (full setup competencia) $45,000. Todos con garantia e instalacion. Cual es su presupuesto aproximado?`;
+  }
+  if (text.includes('camara') || text.includes('reverso') || text.includes('retroces')) {
+    return `Hola ${c.name.split(' ')[0]}! Para camara de retroceso en su ${vehicle} recomendamos la Pioneer HD con sensor de proximidad, precio $3,500 con instalacion. Tambien tenemos opcion con pantalla 9" touch por $6,500. La instalacion toma 2 horas. Podemos agendar manana si gusta.`;
+  }
+  if (text.includes('spoiler') || text.includes('aleron')) {
+    return `Buenas ${c.name.split(' ')[0]}! Los spoilers para ${vehicle} estan disponibles en fibra de carbono y ABS pintado. Precios: ABS pintado al color $4,200 — Fibra de carbono $8,500. Instalacion incluida (1 hora). Le envio fotos de los estilos disponibles ahora mismo?`;
+  }
+  if (text.includes('luces') || text.includes('led') || text.includes('bomb')) {
+    return `Hola ${c.name.split(' ')[0]}! Para su ${vehicle} manejamos kits LED completos desde $2,800 (faros principales) hasta $8,500 (full kit con interiores, bajo carro y accent). Todos tienen garantia de 2 anos. Prefiere algo funcional o mas estetico?`;
+  }
+  if (text.includes('pintar') || text.includes('pintura') || text.includes('techo')) {
+    return `Buenas ${c.name.split(' ')[0]}! Pintar el techo en negro de su ${vehicle} cuesta $8,500 en pintura automotiva con 3 capas de barniz. Trabajo toma 2 dias. Tambien hacemos vinil negro mate por $4,200 (1 dia, se puede remover). Cual le interesa?`;
+  }
+  if (text.includes('pulir') || text.includes('pulido') || text.includes('rayad')) {
+    return `Hola ${c.name.split(' ')[0]}! El pulido profesional de aros para ${vehicle} cuesta $500 por aro ($2,000 los 4). Entrega al dia siguiente. Tambien hacemos pulido de carroceria completo con cera $3,500. Cuando los podria traer?`;
+  }
+  if (text.includes('forro') || text.includes('asiento')) {
+    return `Buenas ${c.name.split(' ')[0]}! Para forros de cuero sintetico premium de su ${vehicle} el juego completo cuesta $6,500 instalado. Cuero genuino $12,500. Disponibles en negro, beige, marron y rojo. Puedo enviarle muestras de los colores?`;
+  }
+  if (text.includes('sticker') || text.includes('vinil') || text.includes('calcoman')) {
+    return `Hola ${c.name.split(' ')[0]}! Para stickers y vinilos deportivos en su ${vehicle} manejamos disenos desde $800 (simples) hasta $4,500 (wrap parcial). Si tiene un diseno en mente mandenos la foto, sino puede escoger del catalogo en el taller. Sabados abiertos hasta las 4pm.`;
+  }
+  if (text.includes('lavado') || text.includes('detallad') || text.includes('limp')) {
+    return `Buenas ${c.name.split(' ')[0]}! El lavado premium para ${vehicle} incluye: lavado exterior, cera, detallado interior profundo, limpieza de tapiceria y aromatizacion. Precio $2,800 (toma 3-4 horas). Puede pasar cuando guste, no necesita cita.`;
+  }
+  if (text.includes('cita') || text.includes('agendar') || text.includes('manana') || text.includes('cuando')) {
+    return `Perfecto ${c.name.split(' ')[0]}! Tenemos disponibilidad manana a las 9am, 11am y 2pm. Tambien este sabado en la manana. Cual le conviene mejor? Estamos en Av. 27 de Febrero #245, al lado del Banco Popular.`;
+  }
+  if (text.includes('precio') || text.includes('cost') || text.includes('cuanto') || text.includes('cotiz')) {
+    return `Hola ${c.name.split(' ')[0]}! Con mucho gusto le preparo una cotizacion personalizada para su ${vehicle}. Me puede especificar exactamente que servicio le interesa y le envio los precios de inmediato con las opciones disponibles.`;
+  }
+  if (text.includes('hola') || text.includes('buenas') || text.includes('buen dia')) {
+    return `Hola ${c.name.split(' ')[0]}! Buen dia, gracias por contactarnos. Soy el asistente de Auto Adornos Navarro. En que le puedo ayudar hoy con su ${vehicle}? Tenemos disponibilidad para verlo esta semana.`;
+  }
+
+  // Default fallback
+  return `Hola ${c.name.split(' ')[0]}! Gracias por contactar Auto Adornos Navarro. Con gusto le ayudo con su ${vehicle}. Me puede dar mas detalles de lo que necesita y le preparo una cotizacion completa? Tambien le puedo enviar fotos de trabajos similares que hemos realizado.`;
+}
+
+function detectIntent(msg) {
+  const lastIn = [...msg.conversation].reverse().find(x => x.dir === 'in');
+  const text = (lastIn ? lastIn.text : msg.preview).toLowerCase();
+  if (text.includes('aro') || text.includes('rin')) return 'Consulta sobre aros';
+  if (text.includes('tintad') || text.includes('tinte') || text.includes('cristal') || text.includes('polariz')) return 'Consulta sobre tintado';
+  if (text.includes('sonid') || text.includes('audio') || text.includes('subwoofer')) return 'Consulta sobre sonido';
+  if (text.includes('camara') || text.includes('reverso')) return 'Consulta sobre camaras';
+  if (text.includes('spoiler') || text.includes('aleron')) return 'Consulta sobre spoilers';
+  if (text.includes('luces') || text.includes('led')) return 'Consulta sobre iluminacion';
+  if (text.includes('pintar') || text.includes('techo')) return 'Consulta sobre pintura';
+  if (text.includes('pulir') || text.includes('pulido')) return 'Consulta sobre pulido';
+  if (text.includes('forro') || text.includes('asiento')) return 'Consulta sobre forros';
+  if (text.includes('sticker') || text.includes('vinil')) return 'Consulta sobre vinilos';
+  if (text.includes('lavado') || text.includes('detallad')) return 'Consulta sobre lavado';
+  if (text.includes('cita') || text.includes('agendar')) return 'Solicitud de cita';
+  if (text.includes('precio') || text.includes('cotiz')) return 'Solicitud de cotizacion';
+  return 'Consulta general';
+}
+
+function renderAISuggestion(msg) {
+  const area = document.getElementById('aiSuggestionArea');
+  if (!area) return;
+  const response = generateAIResponse(msg);
+  const intent = detectIntent(msg);
+  area.innerHTML = `
+    <div class="ai-suggestion" id="aiSuggestion">
+      <div class="ai-suggestion-header">
+        <div class="ai-suggestion-label">
+          <span class="ai-badge">&#10024; IA</span>
+          Sugerencia &middot; ${intent}
+        </div>
+        <button class="ai-suggestion-dismiss" onclick="document.getElementById('aiSuggestion').remove()" title="Descartar">&times;</button>
+      </div>
+      <div class="ai-suggestion-text">${response}</div>
+      <div class="ai-suggestion-actions">
+        <button class="ai-action-btn primary" onclick="acceptAISuggestion(\`${response.replace(/`/g, '\\`').replace(/"/g, '&quot;')}\`, '${msg.id}')">Usar respuesta</button>
+        <button class="ai-action-btn" onclick="regenerateAI('${msg.id}')">Regenerar</button>
+        <button class="ai-action-btn" onclick="document.getElementById('aiSuggestion').remove()">Descartar</button>
+      </div>
+    </div>
+  `;
+}
+
+function acceptAISuggestion(text, msgId) {
+  document.getElementById('replyInput').value = text;
+  const s = document.getElementById('aiSuggestion');
+  if (s) s.remove();
+  document.getElementById('replyInput').focus();
+}
+
+function regenerateAI(msgId) {
+  const area = document.getElementById('aiSuggestionArea');
+  area.innerHTML = `<div class="ai-suggestion"><div class="ai-thinking">
+    <span class="ai-badge" style="background:var(--accent);color:#000;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:800;">&#10024; IA</span>
+    Navarro AI pensando
+    <span class="ai-dots"><span></span><span></span><span></span></span>
+  </div></div>`;
+  setTimeout(() => {
+    const msg = messages.find(m => m.id === msgId);
+    if (msg) renderAISuggestion(msg);
+  }, 1200);
+}
+
+function generateAIReply(msgId) {
+  const msg = messages.find(m => m.id === msgId);
+  if (!msg) return;
+  regenerateAI(msgId);
+}
+
+function takeoverConversation(msgId) {
+  const msg = messages.find(m => m.id === msgId);
+  if (!msg) return;
+  msg.aiHandled = false;
+  msg.needsHuman = false;
+  renderDetailPanel(msg);
+}
+
+function sendReply(msgId) {
+  const input = document.getElementById('replyInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const msg = messages.find(m => m.id === msgId);
+  if (!msg) return;
+  msg.conversation.push({ dir: 'out', text, time: 'ahora' });
+  msg.status = 'respondido';
+  input.value = '';
+  renderDetailPanel(msg);
+  renderMessagesList();
+}
+
+function changeStatus(msgId, status) {
+  const msg = messages.find(m => m.id === msgId);
+  if (!msg) return;
+  msg.status = status;
+  renderDetailPanel(msg);
+  renderMessagesList();
+}
+
+// Dashboard — Bar chart
+function renderDashboard() {
+  const bars = [
+    { day: 'Lun', wa: 14, fb: 4, ig: 6 },
+    { day: 'Mar', wa: 20, fb: 5, ig: 8 },
+    { day: 'Mie', wa: 16, fb: 7, ig: 5 },
+    { day: 'Jue', wa: 24, fb: 8, ig: 10 },
+    { day: 'Vie', wa: 28, fb: 6, ig: 12 },
+    { day: 'Sab', wa: 33, fb: 10, ig: 14 },
+    { day: 'Dom', wa: 22, fb: 5, ig: 8 }
+  ];
+  const maxTotal = Math.max(...bars.map(b => b.wa + b.fb + b.ig));
+  const maxHeight = 140;
+  document.getElementById('barChart').innerHTML = bars.map(b => {
+    const total = b.wa + b.fb + b.ig;
+    const h = (total / maxTotal) * maxHeight;
+    const waH = (b.wa / total) * h;
+    const fbH = (b.fb / total) * h;
+    const igH = (b.ig / total) * h;
+    return `
+      <div class="bar-col">
+        <div style="font-size:10px;font-weight:600;color:var(--text-mid);margin-bottom:2px;">${total}</div>
+        <div class="bar-stack" style="height:${h}px;">
+          <div class="bar-seg whatsapp" style="height:${waH}px" title="WhatsApp: ${b.wa}"></div>
+          <div class="bar-seg instagram" style="height:${igH}px" title="Instagram: ${b.ig}"></div>
+          <div class="bar-seg facebook" style="height:${fbH}px" title="Facebook: ${b.fb}"></div>
+        </div>
+        <div class="bar-label">${b.day}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Activity list
+  const activity = [
+    { name: 'Carlos Mendez', action: 'envio un mensaje', channel: 'whatsapp', time: 'hace 3 min' },
+    { name: 'Carmen Lopez', action: 'confirmo cita', channel: 'facebook', time: 'hace 15 min' },
+    { name: 'Julia Santana', action: 'convirtio a venta', channel: 'instagram', time: 'hace 2 h' },
+    { name: 'Pedro Gomez', action: 'pregunto por precio', channel: 'whatsapp', time: 'hace 3 h' },
+    { name: 'Ana Rodriguez', action: 'solicito cotizacion', channel: 'whatsapp', time: 'hace 4 h' }
+  ];
+  document.getElementById('activityList').innerHTML = activity.map(a => `
+    <div class="activity-item">
+      <div class="activity-avatar" style="background:linear-gradient(135deg,#667EEA,#764BA2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">${initials(a.name)}</div>
+      <div class="activity-text"><strong>${a.name}</strong> ${a.action} por <strong style="color:var(--${a.channel})">${a.channel}</strong></div>
+      <div class="activity-time">${a.time}</div>
+    </div>
+  `).join('');
+}
+
+function renderContacts() {
+  const grid = document.getElementById('contactsGrid');
+  grid.innerHTML = Object.entries(customers).map(([id, c]) => `
+    <div class="chart-card" style="padding:16px;cursor:pointer;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#667EEA,#764BA2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">${initials(c.name)}</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;">${c.name}</div>
+          <div style="font-size:11px;color:var(--text-mid);">${c.phone}</div>
+        </div>
+        <span class="channel-dot ${c.channel}"></span>
+      </div>
+      <div style="font-size:12px;color:var(--text-mid);display:flex;align-items:center;gap:5px;">
+        &#128663; ${c.vehicle}
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--text-light);font-family:monospace;">${c.handle}</div>
+    </div>
+  `).join('');
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  if (!q) { renderMessagesList(); return; }
+  const list = document.getElementById('messagesList');
+  const filtered = messages.filter(m => {
+    const c = customers[m.customerId];
+    return c.name.toLowerCase().includes(q) ||
+           c.phone.toLowerCase().includes(q) ||
+           c.vehicle.toLowerCase().includes(q) ||
+           m.preview.toLowerCase().includes(q);
+  });
+  list.innerHTML = filtered.map(m => {
+    const c = customers[m.customerId];
+    return `
+      <div class="message-item" data-id="${m.id}">
+        <div class="msg-header">
+          <div class="msg-avatar">
+            ${initials(c.name)}
+            <div class="channel-icon ${m.channel}">${channelIcon(m.channel)}</div>
+          </div>
+          <div class="msg-name-row">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <div class="msg-name">${c.name}</div>
+              <div class="msg-time">${m.time}</div>
+            </div>
+            <div class="msg-vehicle">&#128663; ${c.vehicle}</div>
+          </div>
+        </div>
+        <div class="msg-preview">${m.preview}</div>
+        <div class="msg-footer">
+          <span class="msg-tag ${statusClass(m.status)}">${statusLabel(m.status)}</span>
+          <span style="font-size:10px;color:var(--text-light);">${c.phone}</span>
+        </div>
+      </div>
+    `;
+  }).join('') || `<div style="padding:40px 20px;text-align:center;color:var(--text-light);font-size:13px;">Sin resultados</div>`;
+  document.querySelectorAll('.message-item').forEach(item => {
+    item.addEventListener('click', () => selectMessage(item.dataset.id));
+  });
+});
+
+// INIT
+renderMessagesList();
+// Auto-select first message for demo
+setTimeout(() => selectMessage('m01'), 100);
+</script>
+</body>
+</html>
